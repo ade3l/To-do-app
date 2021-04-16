@@ -1,6 +1,8 @@
 package com.example.todoapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -21,7 +23,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class ScrollingActivity extends AppCompatActivity {
-
+    SQLiteDatabase tasks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,9 +34,9 @@ public class ScrollingActivity extends AppCompatActivity {
         CollapsingToolbarLayout toolBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
 
-        SQLiteDatabase tasks=this.openOrCreateDatabase("taskS data",MODE_PRIVATE,null);
-        tasks.execSQL("CREATE TABLE IF NOT EXISTS tasks(task VARCHAR , description VARCHAR)");
-
+        tasks=this.openOrCreateDatabase("tasks data",MODE_PRIVATE,null);
+        tasks.execSQL("CREATE TABLE IF NOT EXISTS tasks(task_num INT(4), task VARCHAR , description VARCHAR)");
+        SharedPreferences pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,10 +57,11 @@ public class ScrollingActivity extends AppCompatActivity {
                         dialog.dismiss();
                         String title = title_textView.getText().toString();
                         String description =description_textView.getText().toString();
-
+                        int task_num=pref.getInt("index",1);
                         if (title.length()!=0){
-                            tasks.execSQL("INSERT INTO tasks(task,description)  Values('"+title+"', '"+description+"')");
-
+                            tasks.execSQL("INSERT INTO tasks(task_num, task,description)  Values('"+task_num+"','"+title+"', '"+description+"')");
+                            task_num+=1;
+                            pref.edit().putInt("index", task_num).apply();
                             Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
 
                         }
@@ -96,6 +99,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            tasks.execSQL("DROP TABLE IF EXISTS tasks");
             return true;
         }
         return super.onOptionsItemSelected(item);

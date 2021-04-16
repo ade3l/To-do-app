@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#190e1b"
     android:fitsSystemWindows="true"
     tools:context=".ScrollingActivity">
 
@@ -13,7 +14,7 @@
         android:layout_height="264dp"
         android:background="@drawable/bg"
         android:fitsSystemWindows="true"
-        android:theme="@style/Theme.Scrolling1.AppBarOverlay">
+        android:theme="@style/Theme.ToDoApp.AppBarOverlay">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
@@ -30,8 +31,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/Theme.ToDoApp.PopupOverlay"
-                app:subtitleTextColor="#E91E63"
-                app:titleTextColor="#E91E63" />
+                />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

@@ -3,6 +3,7 @@ package com.example.todoapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -22,8 +24,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ScrollingActivity extends AppCompatActivity {
     SQLiteDatabase tasks;
+    List<String> titles=new ArrayList<>();
+    List<String> descriptions=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +88,25 @@ public class ScrollingActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+        Cursor c=tasks.rawQuery("SELECT * FROM tasks", null);
+
+        int desc_index=c.getColumnIndex("description");
+        int title_index=c.getColumnIndex("task");
+
+        Log.i("mine","hello");
+        c.moveToFirst();
+        try {
+            while (c != null) {
+                titles.add(c.getString(title_index));
+                descriptions.add( c.getString(desc_index));
+                c.moveToNext();
+                Log.i("mine", "task: " + descriptions.toString());
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.todoapp;
 
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -30,8 +31,10 @@ public class ScrollingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
-        final String[] title = new String[1];
-        final String[] description = new String[1];
+
+        SQLiteDatabase tasks=this.openOrCreateDatabase("taskS data",MODE_PRIVATE,null);
+        tasks.execSQL("CREATE TABLE IF NOT EXISTS tasks(task VARCHAR , description VARCHAR)");
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,8 +53,19 @@ public class ScrollingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        title[0] = title_textView.getText().toString();
-                        description[0] =description_textView.getText().toString();
+                        String title = title_textView.getText().toString();
+                        String description =description_textView.getText().toString();
+
+                        if (title.length()!=0){
+                            tasks.execSQL("INSERT INTO tasks(task,description)  Values('"+title+"', '"+description+"')");
+
+                            Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
+
+                        }
+                        else{
+                            Toast.makeText(ScrollingActivity.this, "Title cannot be blank", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

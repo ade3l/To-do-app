@@ -33,6 +33,8 @@ public class ScrollingActivity extends AppCompatActivity {
     SQLiteDatabase tasks;
     List<String> titles=new ArrayList<>();
     List<String> descriptions=new ArrayList<>();
+    List<Integer> indexes = new ArrayList<Integer>();
+    SharedPreferences pref;
     RecyclerView recycler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +45,10 @@ public class ScrollingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
-
+        pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
         tasks=this.openOrCreateDatabase("tasks data",MODE_PRIVATE,null);
         tasks.execSQL("CREATE TABLE IF NOT EXISTS tasks(task_num INT(4), task VARCHAR , description VARCHAR)");
-        SharedPreferences pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +77,8 @@ public class ScrollingActivity extends AppCompatActivity {
                             Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
                             titles.add(title);
                             descriptions.add(description);
-                            adapter my_adapter=new adapter(getApplicationContext(), titles, descriptions);
+                            indexes.add(task_num);
+                            adapter my_adapter=new adapter(getApplicationContext(), titles, descriptions,indexes);
                             recycler.setAdapter(my_adapter);
                             recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         }
@@ -99,13 +102,14 @@ public class ScrollingActivity extends AppCompatActivity {
 
         int desc_index=c.getColumnIndex("description");
         int title_index=c.getColumnIndex("task");
-
+        int task_index=c.getColumnIndex("task_num");
         Log.i("mine","hello");
         c.moveToFirst();
         try {
             while (c != null) {
                 titles.add(c.getString(title_index));
                 descriptions.add( c.getString(desc_index));
+                indexes.add(c.getInt(task_index));
                 c.moveToNext();
                 Log.i("mine", "task: " + descriptions.toString());
             }
@@ -114,7 +118,7 @@ public class ScrollingActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         recycler=findViewById(R.id.recycler);
-        adapter my_adapter=new adapter(this, titles, descriptions);
+        adapter my_adapter=new adapter(this, titles, descriptions, indexes);
         recycler.setAdapter(my_adapter);
         recycler.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -136,6 +140,8 @@ public class ScrollingActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             tasks.execSQL("DROP TABLE IF EXISTS tasks");
+            pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
+            pref.edit().putInt("index", 0).apply();
             return true;
         }
         return super.onOptionsItemSelected(item);

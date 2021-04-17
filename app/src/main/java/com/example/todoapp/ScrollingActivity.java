@@ -73,7 +73,11 @@ public class ScrollingActivity extends AppCompatActivity {
                             task_num+=1;
                             pref.edit().putInt("index", task_num).apply();
                             Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
-
+                            titles.add(title);
+                            descriptions.add(description);
+                            adapter my_adapter=new adapter(getApplicationContext(), titles, descriptions);
+                            recycler.setAdapter(my_adapter);
+                            recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         }
                         else{
                             Toast.makeText(ScrollingActivity.this, "Title cannot be blank", Toast.LENGTH_SHORT).show();

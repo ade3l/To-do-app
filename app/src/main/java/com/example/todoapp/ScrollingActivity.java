@@ -14,6 +14,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,7 @@ public class ScrollingActivity extends AppCompatActivity {
     SQLiteDatabase tasks;
     List<String> titles=new ArrayList<>();
     List<String> descriptions=new ArrayList<>();
+    RecyclerView recycler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +109,10 @@ public class ScrollingActivity extends AppCompatActivity {
         catch (Exception e){
             e.printStackTrace();
         }
-
+        recycler=findViewById(R.id.recycler);
+        adapter my_adapter=new adapter(this, titles, descriptions);
+        recycler.setAdapter(my_adapter);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override

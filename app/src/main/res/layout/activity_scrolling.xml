@@ -38,7 +38,8 @@
 
     <include
         layout="@layout/content_scrolling"
-        android:layout_height="557dp" />
+        android:layout_height="557dp"
+        android:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

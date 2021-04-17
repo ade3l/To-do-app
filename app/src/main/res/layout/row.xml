@@ -6,10 +6,11 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
     android:layout_marginTop="10dp"
-    android:layout_marginRight="15dp"
-    android:layout_marginBottom="30dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="5dp"
     android:background="@color/purple_500"
-    android:paddingLeft="10dp">
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -43,6 +44,19 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:layout_marginBottom="10dp"/>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:backgroundTint="@color/light_purple"
+                android:text="Delete"
+                android:drawableLeft="@drawable/delete"
+                android:drawableTint="@color/white"
+
+                />
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

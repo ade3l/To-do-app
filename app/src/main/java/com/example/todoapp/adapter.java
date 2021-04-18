@@ -1,6 +1,7 @@
 package com.example.todoapp;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ScrollingActivity.tasks.execSQL("DELETE FROM tasks WHERE task_num="+task_number.get(position)+"");
 
                 Toast.makeText(context, String.valueOf(task_number.get(position)), Toast.LENGTH_SHORT).show();
             }

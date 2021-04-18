@@ -30,12 +30,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScrollingActivity extends AppCompatActivity {
-    SQLiteDatabase tasks;
+    static SQLiteDatabase tasks;
     List<String> titles=new ArrayList<>();
     List<String> descriptions=new ArrayList<>();
     List<Integer> indexes = new ArrayList<Integer>();
     SharedPreferences pref;
     RecyclerView recycler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +100,6 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
         Cursor c=tasks.rawQuery("SELECT * FROM tasks", null);
-
         int desc_index=c.getColumnIndex("description");
         int title_index=c.getColumnIndex("task");
         int task_index=c.getColumnIndex("task_num");

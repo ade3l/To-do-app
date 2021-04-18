@@ -35,6 +35,7 @@ public class ScrollingActivity extends AppCompatActivity {
     static List<String> descriptions_array =new ArrayList<>();
     static List<Integer> indexes_array = new ArrayList<Integer>();
     SharedPreferences pref;
+    static ViewGroup vg;
     static RecyclerView recycler;
 
     private static Context context;
@@ -45,6 +46,7 @@ public class ScrollingActivity extends AppCompatActivity {
         //the variable 'context' is assigned the context value in the on create method
         return ScrollingActivity.context;
     }
+
     static void setList(){
         titles_array=new ArrayList<>();
         descriptions_array=new ArrayList<>();
@@ -53,7 +55,7 @@ public class ScrollingActivity extends AppCompatActivity {
         int desc_index=c.getColumnIndex("description");
         int title_index=c.getColumnIndex("task");
         int task_index=c.getColumnIndex("task_num");
-        Log.i("mine","hello");
+
         c.moveToFirst();
         try {
             while (c != null) {
@@ -61,7 +63,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 descriptions_array.add( c.getString(desc_index));
                 indexes_array.add(c.getInt(task_index));
                 c.moveToNext();
-                Log.i("mine", "task: " + descriptions_array.toString());
+
             }
         }
         catch (Exception e){
@@ -88,7 +90,8 @@ public class ScrollingActivity extends AppCompatActivity {
         tasks.execSQL("CREATE TABLE IF NOT EXISTS tasks(task_num INT(4), task VARCHAR , description VARCHAR)");
         recycler=findViewById(R.id.recyclerView);
         //Assigning the context to the variable
-        ScrollingActivity.context = getApplicationContext();
+        ScrollingActivity.context =this;
+        vg=(ViewGroup) findViewById(android.R.id.content);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

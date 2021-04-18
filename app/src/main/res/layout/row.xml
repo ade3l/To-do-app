@@ -10,6 +10,8 @@
     android:layout_marginRight="10dp"
     android:layout_marginBottom="0dp"
     android:background="@drawable/layout_bg"
+    android:backgroundTint="#430B42"
+    android:backgroundTintMode="src_in"
     android:padding="15dp"
     android:paddingLeft="10dp"
     android:paddingTop="5dp"
@@ -19,6 +21,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardBackgroundColor="#430B42"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +30,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/purple_500"
+            android:background="@color/purple_dark"
             android:orientation="vertical">
 
             <LinearLayout
@@ -51,12 +54,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    app:backgroundTint="@color/purple_700"
+                    app:backgroundTint="@color/purple_dark"
                     app:fabSize="mini"
                     app:rippleColor="@color/white"
                     app:srcCompat="@drawable/delete"
-                    app:tint="#929B9E"
-                    />
+                    app:tint="#929B9E" />
 
             </LinearLayout>
 
@@ -75,11 +77,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                app:backgroundTint="@color/purple_700"
+                app:backgroundTint="@color/purple_dark"
                 app:fabSize="mini"
                 app:rippleColor="@color/white"
                 app:srcCompat="@drawable/edit"
-                app:tint="@android:color/darker_gray" />
+                app:tint="#E298A3" />
 
         </LinearLayout>
 

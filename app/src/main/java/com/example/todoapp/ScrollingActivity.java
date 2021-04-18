@@ -158,6 +158,7 @@ public class ScrollingActivity extends AppCompatActivity {
             tasks.execSQL("DROP TABLE IF EXISTS tasks");
             pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
             pref.edit().putInt("index", 0).apply();
+            setList();
             return true;
         }
         return super.onOptionsItemSelected(item);

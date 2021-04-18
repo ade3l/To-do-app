@@ -55,8 +55,10 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
         holder.title_text.setText(titles.get(position));
-        holder.desc_text.setText(descriptions.get(position));
-
+        if(descriptions.get(position).length()!=0) {
+            holder.desc_text.setVisibility(View.VISIBLE);
+            holder.desc_text.setText(descriptions.get(position));
+        }
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,9 +135,9 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
 
     public class myViewHolder extends RecyclerView.ViewHolder{
         TextView title_text,desc_text;
-        Button deleteButton ;
+
         ConstraintLayout layout;
-        FloatingActionButton editButton;
+        FloatingActionButton editButton,deleteButton;
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
             title_text=itemView.findViewById(R.id.title_text);

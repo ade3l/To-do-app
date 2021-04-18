@@ -9,9 +9,12 @@
     android:layout_marginTop="20dp"
     android:layout_marginRight="10dp"
     android:layout_marginBottom="0dp"
-    android:background="@color/purple_500"
+    android:background="@drawable/layout_bg"
+    android:padding="15dp"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:paddingTop="5dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="5dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -35,24 +38,24 @@
                 <TextView
                     android:id="@+id/title_text"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_weight="1"
                     android:text="TextView"
                     android:textColor="@color/white"
                     android:textSize="24sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/edit"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/delete"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:tint="@android:color/darker_gray"
                     android:clickable="true"
                     app:backgroundTint="@color/purple_700"
                     app:fabSize="mini"
-                    app:srcCompat="@drawable/edit"
                     app:rippleColor="@color/white"
+                    app:srcCompat="@drawable/delete"
+                    app:tint="#929B9E"
                     />
 
             </LinearLayout>
@@ -64,19 +67,19 @@
                 android:layout_marginBottom="10dp"
                 android:text="TextView"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
-            <Button
-                android:id="@+id/delete"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:backgroundTint="@color/light_purple"
-                android:drawableLeft="@drawable/delete"
-                android:drawableTint="@color/white"
-                android:text="Delete"
-
-                android:textColor="@color/white" />
+                android:clickable="true"
+                app:backgroundTint="@color/purple_700"
+                app:fabSize="mini"
+                app:rippleColor="@color/white"
+                app:srcCompat="@drawable/edit"
+                app:tint="@android:color/darker_gray" />
 
         </LinearLayout>
 

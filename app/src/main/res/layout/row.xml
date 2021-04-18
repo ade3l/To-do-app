@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
@@ -30,20 +31,20 @@
                 android:id="@+id/title_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textColor="@color/white"
                 android:textSize="24sp"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/desc_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:text="TextView"
                 android:textColor="@color/white"
-                android:textSize="16sp"
-                android:layout_marginBottom="10dp"/>
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/delete"
@@ -51,11 +52,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:backgroundTint="@color/light_purple"
-                android:text="Delete"
                 android:drawableLeft="@drawable/delete"
                 android:drawableTint="@color/white"
+                android:text="Delete"
 
-                />
+                android:textColor="@color/white" />
 
         </LinearLayout>
 

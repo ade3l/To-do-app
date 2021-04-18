@@ -31,11 +31,47 @@ import java.util.List;
 
 public class ScrollingActivity extends AppCompatActivity {
     static SQLiteDatabase tasks;
-    List<String> titles=new ArrayList<>();
-    List<String> descriptions=new ArrayList<>();
-    List<Integer> indexes = new ArrayList<Integer>();
+    static List<String> titles_array =new ArrayList<>();
+    static List<String> descriptions_array =new ArrayList<>();
+    static List<Integer> indexes_array = new ArrayList<Integer>();
     SharedPreferences pref;
-    RecyclerView recycler;
+    static RecyclerView recycler;
+
+    private static Context context;
+    public static Context getAppContext() {
+        //This function is just to get the context.
+        //I need to call setList() from the adapter class to refresh the recycler view
+        //but getApplicationContext() and 'this' cannot be made static. And hence this function
+        //the variable 'context' is assigned the context value in the on create method
+        return ScrollingActivity.context;
+    }
+    static void setList(){
+        titles_array=new ArrayList<>();
+        descriptions_array=new ArrayList<>();
+        indexes_array=new ArrayList<>();
+        Cursor c=tasks.rawQuery("SELECT * FROM tasks", null);
+        int desc_index=c.getColumnIndex("description");
+        int title_index=c.getColumnIndex("task");
+        int task_index=c.getColumnIndex("task_num");
+        Log.i("mine","hello");
+        c.moveToFirst();
+        try {
+            while (c != null) {
+                titles_array.add(c.getString(title_index));
+                descriptions_array.add( c.getString(desc_index));
+                indexes_array.add(c.getInt(task_index));
+                c.moveToNext();
+                Log.i("mine", "task: " + descriptions_array.toString());
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        adapter my_adapter=new adapter(getAppContext(), titles_array, descriptions_array, indexes_array);
+        recycler.setAdapter(my_adapter);
+        recycler.setLayoutManager(new LinearLayoutManager(getAppContext()));
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +82,13 @@ public class ScrollingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
+
         pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
         tasks=this.openOrCreateDatabase("tasks data",MODE_PRIVATE,null);
         tasks.execSQL("CREATE TABLE IF NOT EXISTS tasks(task_num INT(4), task VARCHAR , description VARCHAR)");
-
+        recycler=findViewById(R.id.recyclerView);
+        //Assigning the context to the variable
+        ScrollingActivity.context = getApplicationContext();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,12 +115,7 @@ public class ScrollingActivity extends AppCompatActivity {
                             task_num+=1;
                             pref.edit().putInt("index", task_num).apply();
                             Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
-                            titles.add(title);
-                            descriptions.add(description);
-                            indexes.add(task_num);
-                            adapter my_adapter=new adapter(getApplicationContext(), titles, descriptions,indexes);
-                            recycler.setAdapter(my_adapter);
-                            recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                            setList();
                         }
                         else{
                             Toast.makeText(ScrollingActivity.this, "Title cannot be blank", Toast.LENGTH_SHORT).show();
@@ -99,28 +133,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 builder.show();
             }
         });
-        Cursor c=tasks.rawQuery("SELECT * FROM tasks", null);
-        int desc_index=c.getColumnIndex("description");
-        int title_index=c.getColumnIndex("task");
-        int task_index=c.getColumnIndex("task_num");
-        Log.i("mine","hello");
-        c.moveToFirst();
-        try {
-            while (c != null) {
-                titles.add(c.getString(title_index));
-                descriptions.add( c.getString(desc_index));
-                indexes.add(c.getInt(task_index));
-                c.moveToNext();
-                Log.i("mine", "task: " + descriptions.toString());
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        recycler=findViewById(R.id.recycler);
-        adapter my_adapter=new adapter(this, titles, descriptions, indexes);
-        recycler.setAdapter(my_adapter);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
+        setList();
     }
 
     @Override

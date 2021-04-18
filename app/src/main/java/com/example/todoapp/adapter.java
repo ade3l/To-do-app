@@ -1,6 +1,9 @@
 package com.example.todoapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,14 +14,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
     List<String> titles, descriptions;
     Context context;
     List<Integer> task_number;
+
+    List<String> titles_array =new ArrayList<>();
+    List<String> descriptions_array =new ArrayList<>();
+    List<Integer> indexes_array = new ArrayList<Integer>();
+    SharedPreferences pref;
+    RecyclerView recycler;
+    Activity activity;
+
     public adapter(Context ct, List<String> s1, List<String> s2, List<Integer> index){
         titles=s1;
         descriptions=s2;
@@ -43,9 +58,19 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ScrollingActivity.tasks.execSQL("DELETE FROM tasks WHERE task_num="+task_number.get(position)+"");
 
-                Toast.makeText(context, String.valueOf(task_number.get(position)), Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(context)
+                        .setTitle("Delete task")
+                        .setMessage("This action is irreversible. Are you sure you want to delete the task")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ScrollingActivity.tasks.execSQL("DELETE FROM tasks WHERE task_num="+task_number.get(position)+"");
+                                ScrollingActivity.setList();
+                            }
+                        })
+                        .setNegativeButton("No",null)
+                        .show();
             }
         });
     }
@@ -58,12 +83,14 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
     public class myViewHolder extends RecyclerView.ViewHolder{
         TextView title_text,desc_text;
         Button deleteButton;
+        ConstraintLayout layout;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
             title_text=itemView.findViewById(R.id.title_text);
             desc_text=itemView.findViewById(R.id.desc_text);
             deleteButton=itemView.findViewById(R.id.delete);
+            layout=itemView.findViewById(R.id.row_layout);
         }
     }
 }

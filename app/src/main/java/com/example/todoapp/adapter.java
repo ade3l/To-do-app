@@ -1,5 +1,6 @@
 package com.example.todoapp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -53,13 +54,18 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
         return new myViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
         holder.title_text.setText(titles.get(position));
-        if(descriptions.get(position).length()!=0) {
+        if (descriptions.get(position).length() != 0) {
             holder.desc_text.setVisibility(View.VISIBLE);
             holder.desc_text.setText(descriptions.get(position));
         }
+        if (dates.get(position).length() != 0) {
+            holder.dueDate_text.setText("Due Date: " + dates.get(position));
+        }
+
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,11 +76,11 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ScrollingActivity.tasks.execSQL("DELETE FROM tasks WHERE task_num="+task_number.get(position)+"");
+                                ScrollingActivity.tasks.execSQL("DELETE FROM tasks WHERE task_num=" + task_number.get(position) + "");
                                 ScrollingActivity.setList();
                             }
                         })
-                        .setNegativeButton("No",null)
+                        .setNegativeButton("No", null)
                         .show();
             }
         });
@@ -82,40 +88,41 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Cursor c=ScrollingActivity.tasks.rawQuery("SELECT task, description FROM tasks WHERE task_num="+task_number.get(position)+"",null);
-                int description_index=c.getColumnIndex("description");
-                int title_index=c.getColumnIndex("task");
+                Cursor c = ScrollingActivity.tasks.rawQuery("SELECT task, description ,date FROM tasks WHERE task_num=" + task_number.get(position) + "", null);
+                int description_index = c.getColumnIndex("description");
+                int title_index = c.getColumnIndex("task");
+                int date_index = c.getColumnIndex("date");
                 final String[] description = {null};
                 final String[] task = {null};
+                String date = null;
                 c.moveToFirst();
                 try {
                     while (c != null) {
                         description[0] = c.getString(description_index);
-                        task[0] =c.getString(title_index);
+                        task[0] = c.getString(title_index);
+                        date = c.getString(date_index);
                         c.moveToNext();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Edit Task");
-                View viewInflated = LayoutInflater.from(context).inflate(R.layout.task_input,ScrollingActivity.vg , false);
+                View viewInflated = LayoutInflater.from(context).inflate(R.layout.task_input, ScrollingActivity.vg, false);
                 final EditText title_textView = (EditText) viewInflated.findViewById(R.id.title);
                 final EditText description_textView = (EditText) viewInflated.findViewById(R.id.description);
+                EditText date_textView = (EditText) viewInflated.findViewById(R.id.date_text);
                 title_textView.setText(task[0]);
                 description_textView.setText(description[0]);
+                date_textView.setText(date);
                 builder.setView(viewInflated);
 
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        description[0] =description_textView.getText().toString();
-                        task[0] =title_textView.getText().toString();
-                        ScrollingActivity.tasks.execSQL("UPDATE tasks SET task='"+task[0]+"', description='"+description[0]+"' WHERE task_num="+task_number.get(position)+" ");
-                        ScrollingActivity.setList();
+
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -124,18 +131,33 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                         dialog.cancel();
                     }
                 });
-                builder.show();
+//                builder.show();
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        description[0] = description_textView.getText().toString();
+                        task[0] = title_textView.getText().toString();
+                        ScrollingActivity.tasks.execSQL("UPDATE tasks SET task='" + task[0] + "', description='" + description[0] + "' WHERE task_num=" + task_number.get(position) + " ");
+                        ScrollingActivity.setList();
+                    }
+                });
             }
         });
     }
-
+//TODO: make sure that title is not in edit text
+//TODO: make the dialog box only dismiss if title is not empty
+//TODO: make calender popup on button press
+//TODO: add delete animation and change change delete icon to green tick icon
     @Override
     public int getItemCount() {
         return titles.size();
     }
 
     public class myViewHolder extends RecyclerView.ViewHolder{
-        TextView title_text,desc_text;
+        TextView title_text,desc_text,dueDate_text;
         ConstraintLayout layout;
         FloatingActionButton editButton,deleteButton;
         public myViewHolder(@NonNull View itemView) {
@@ -145,6 +167,7 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
             deleteButton=itemView.findViewById(R.id.delete);
             editButton=itemView.findViewById(R.id.edit);
             layout=itemView.findViewById(R.id.row_layout);
+            dueDate_text=itemView.findViewById(R.id.dueDate);
         }
     }
 }

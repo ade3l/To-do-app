@@ -46,7 +46,6 @@ public class ScrollingActivity extends AppCompatActivity {
         //the variable 'context' is assigned the context value in the on create method
         return ScrollingActivity.context;
     }
-//TODO: add a datepicker feature
     static void setList(){
         titles_array.clear();
         descriptions_array.clear();

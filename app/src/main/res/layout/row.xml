@@ -77,27 +77,37 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/linearLayout">
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
                     android:clickable="true"
                     app:backgroundTint="@color/purple_500"
                     app:fabSize="mini"
                     app:rippleColor="@color/white"
                     app:srcCompat="@drawable/edit"
-                    app:tint="#E298A3" />
+                    app:tint="#E298A3"
+                    tools:layout_conversion_absoluteHeight="48dp"
+                    tools:layout_editor_absoluteY="70dp"
+                    tools:layout_editor_absoluteX="15dp"
+                    tools:layout_conversion_absoluteWidth="48dp" />
 
                 <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/dueDate"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    />
+                    android:layout_gravity="center"
+                    android:foregroundGravity="center"
+                    android:gravity="right"
+                    android:textColor="#B8BFC3"
+                    android:textSize="16sp"
+                    tools:layout_conversion_absoluteHeight="19dp"
+                    tools:layout_conversion_absoluteWidth="314dp"
+                    tools:layout_editor_absoluteX="62dp"
+                    tools:layout_editor_absoluteY="87dp" />
             </LinearLayout>
 
         </LinearLayout>

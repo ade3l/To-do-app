@@ -21,6 +21,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
         app:cardBackgroundColor="@color/purple_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,6 +54,7 @@
                     android:id="@+id/delete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
                     android:clickable="true"
                     app:backgroundTint="@color/purple_dark"
                     app:fabSize="mini"
@@ -76,6 +78,7 @@
                 android:id="@+id/edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
                 android:clickable="true"
                 app:backgroundTint="@color/purple_500"
                 app:fabSize="mini"

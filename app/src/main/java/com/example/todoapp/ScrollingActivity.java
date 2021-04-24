@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -46,7 +47,7 @@ public class ScrollingActivity extends AppCompatActivity {
         //the variable 'context' is assigned the context value in the on create method
         return ScrollingActivity.context;
     }
-
+//TODO: add a datepicker feature
     static void setList(){
         titles_array=new ArrayList<>();
         descriptions_array=new ArrayList<>();
@@ -103,7 +104,14 @@ public class ScrollingActivity extends AppCompatActivity {
                 View viewInflated = LayoutInflater.from(ScrollingActivity.this).inflate(R.layout.task_input,(ViewGroup) findViewById(android.R.id.content) , false);
                 final EditText title_textView = (EditText) viewInflated.findViewById(R.id.title);
                 final EditText description_textView = (EditText) viewInflated.findViewById(R.id.description);
-
+                final EditText date_textView = (EditText) viewInflated.findViewById(R.id.description);
+                FloatingActionButton calendar=viewInflated.findViewById(R.id.date);
+                calendar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(ScrollingActivity.this, "Still under development", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 builder.setView(viewInflated);
 
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -162,4 +170,5 @@ public class ScrollingActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

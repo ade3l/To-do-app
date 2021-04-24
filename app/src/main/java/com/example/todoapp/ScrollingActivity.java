@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -18,7 +17,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -35,6 +33,7 @@ public class ScrollingActivity extends AppCompatActivity {
     static List<String> titles_array =new ArrayList<>();
     static List<String> descriptions_array =new ArrayList<>();
     static List<Integer> indexes_array = new ArrayList<Integer>();
+    static List<String> dates_array = new ArrayList<>();
     SharedPreferences pref;
     static ViewGroup vg;
     static RecyclerView recycler;
@@ -49,20 +48,22 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 //TODO: add a datepicker feature
     static void setList(){
-        titles_array=new ArrayList<>();
-        descriptions_array=new ArrayList<>();
-        indexes_array=new ArrayList<>();
+        titles_array.clear();
+        descriptions_array.clear();
+        indexes_array.clear();
+        dates_array.clear();
         Cursor c=tasks.rawQuery("SELECT * FROM tasks", null);
         int desc_index=c.getColumnIndex("description");
         int title_index=c.getColumnIndex("task");
         int task_index=c.getColumnIndex("task_num");
-
+        int date_index=c.getColumnIndex("date");
         c.moveToFirst();
         try {
             while (c != null) {
                 titles_array.add(c.getString(title_index));
                 descriptions_array.add( c.getString(desc_index));
                 indexes_array.add(c.getInt(task_index));
+                dates_array.add(c.getString(date_index));
                 c.moveToNext();
 
             }
@@ -70,7 +71,7 @@ public class ScrollingActivity extends AppCompatActivity {
         catch (Exception e){
             e.printStackTrace();
         }
-        adapter my_adapter=new adapter(getAppContext(), titles_array, descriptions_array, indexes_array);
+        adapter my_adapter=new adapter(getAppContext(), titles_array, descriptions_array, indexes_array, dates_array);
         recycler.setAdapter(my_adapter);
         recycler.setLayoutManager(new LinearLayoutManager(getAppContext()));
 
@@ -88,7 +89,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
         tasks=this.openOrCreateDatabase("tasks data",MODE_PRIVATE,null);
-        tasks.execSQL("CREATE TABLE IF NOT EXISTS tasks(task_num INT(4), task VARCHAR , description VARCHAR)");
+        tasks.execSQL("CREATE TABLE IF NOT EXISTS tasks(task_num INT(4), task VARCHAR , description VARCHAR, date VARCHAR)");
         recycler=findViewById(R.id.recyclerView);
         //Assigning the context to the variable
         ScrollingActivity.context =this;
@@ -104,8 +105,8 @@ public class ScrollingActivity extends AppCompatActivity {
                 View viewInflated = LayoutInflater.from(ScrollingActivity.this).inflate(R.layout.task_input,(ViewGroup) findViewById(android.R.id.content) , false);
                 final EditText title_textView = (EditText) viewInflated.findViewById(R.id.title);
                 final EditText description_textView = (EditText) viewInflated.findViewById(R.id.description);
-                final EditText date_textView = (EditText) viewInflated.findViewById(R.id.description);
-                FloatingActionButton calendar=viewInflated.findViewById(R.id.date);
+                final EditText date_textView = (EditText) viewInflated.findViewById(R.id.date_text);
+                FloatingActionButton calendar=viewInflated.findViewById(R.id.calendar);
                 calendar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -120,9 +121,10 @@ public class ScrollingActivity extends AppCompatActivity {
                         dialog.dismiss();
                         String title = title_textView.getText().toString();
                         String description =description_textView.getText().toString();
+                        String date=date_textView.getText().toString();
                         int task_num=pref.getInt("index",1);
                         if (title.length()!=0){
-                            tasks.execSQL("INSERT INTO tasks(task_num, task,description)  Values('"+task_num+"','"+title+"', '"+description+"')");
+                            tasks.execSQL("INSERT INTO tasks(task_num, task,description,date)  Values('"+task_num+"','"+title+"', '"+description+"','"+date+"')");
                             task_num+=1;
                             pref.edit().putInt("index", task_num).apply();
                             Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
@@ -165,7 +167,8 @@ public class ScrollingActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             tasks.execSQL("DROP TABLE IF EXISTS tasks");
             pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
-            pref.edit().putInt("index", 0).apply();
+            pref.edit().putInt("index", 1).apply();
+            setList();
             return true;
         }
         return super.onOptionsItemSelected(item);

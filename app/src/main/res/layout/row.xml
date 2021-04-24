@@ -74,17 +74,31 @@
                 android:textSize="16sp"
                 android:visibility="gone" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:clickable="true"
-                app:backgroundTint="@color/purple_500"
-                app:fabSize="mini"
-                app:rippleColor="@color/white"
-                app:srcCompat="@drawable/edit"
-                app:tint="#E298A3" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:clickable="true"
+                    app:backgroundTint="@color/purple_500"
+                    app:fabSize="mini"
+                    app:rippleColor="@color/white"
+                    app:srcCompat="@drawable/edit"
+                    app:tint="#E298A3" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    />
+            </LinearLayout>
 
         </LinearLayout>
 

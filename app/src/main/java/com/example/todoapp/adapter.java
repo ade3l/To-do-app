@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
-    List<String> titles, descriptions;
+    List<String> titles, descriptions, dates;
     Context context;
     List<Integer> task_number;
 
@@ -37,11 +37,12 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
     RecyclerView recycler;
     Activity activity;
 
-    public adapter(Context ct, List<String> s1, List<String> s2, List<Integer> index){
+    public adapter(Context ct, List<String> s1, List<String> s2, List<Integer> index, List<String> dates_array){
         titles=s1;
         descriptions=s2;
         context=ct;
         task_number=index;
+        dates=dates_array;
     }
     @NonNull
     @Override
@@ -135,7 +136,6 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
 
     public class myViewHolder extends RecyclerView.ViewHolder{
         TextView title_text,desc_text;
-
         ConstraintLayout layout;
         FloatingActionButton editButton,deleteButton;
         public myViewHolder(@NonNull View itemView) {

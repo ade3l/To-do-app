@@ -2,6 +2,7 @@ package com.example.todoapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -10,34 +11,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
     List<String> titles, descriptions, dates;
     Context context;
     List<Integer> task_number;
-
-    List<String> titles_array =new ArrayList<>();
-    List<String> descriptions_array =new ArrayList<>();
-    List<Integer> indexes_array = new ArrayList<Integer>();
-    SharedPreferences pref;
-    RecyclerView recycler;
-    Activity activity;
-
     public adapter(Context ct, List<String> s1, List<String> s2, List<Integer> index, List<String> dates_array){
         titles=s1;
         descriptions=s2;
@@ -50,22 +42,23 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
     public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater=LayoutInflater.from(context);
         View view=inflater.inflate(R.layout.row,parent,false);
-
         return new myViewHolder(view);
     }
-
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
         holder.title_text.setText(titles.get(position));
+        //if the description is empty the it'll be hidden
         if (descriptions.get(position).length() != 0) {
             holder.desc_text.setVisibility(View.VISIBLE);
             holder.desc_text.setText(descriptions.get(position));
         }
-        if (dates.get(position).length() != 0) {
+        //if there isn't a due date then it'll be hidden
+        if (dates.get(position).length() != 0 ) {
             holder.dueDate_text.setText("Due Date: " + dates.get(position));
         }
 
+        //Code to delete that task
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,23 +77,25 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                         .show();
             }
         });
-//SELECT DESCRIPTION FROM TASKS WHERE TASK_==
+
+
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //initialisation code
                 Cursor c = ScrollingActivity.tasks.rawQuery("SELECT task, description ,date FROM tasks WHERE task_num=" + task_number.get(position) + "", null);
                 int description_index = c.getColumnIndex("description");
                 int title_index = c.getColumnIndex("task");
                 int date_index = c.getColumnIndex("date");
-                final String[] description = {null};
-                final String[] task = {null};
-                String date = null;
+                final String[] description = {null},task = {null};
+                final String[] date = {null};
                 c.moveToFirst();
                 try {
                     while (c != null) {
                         description[0] = c.getString(description_index);
                         task[0] = c.getString(title_index);
-                        date = c.getString(date_index);
+                        date[0] = c.getString(date_index);
                         c.moveToNext();
                     }
                 } catch (Exception e) {
@@ -113,25 +108,25 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                 View viewInflated = LayoutInflater.from(context).inflate(R.layout.task_input, ScrollingActivity.vg, false);
                 final EditText title_textView = (EditText) viewInflated.findViewById(R.id.title);
                 final EditText description_textView = (EditText) viewInflated.findViewById(R.id.description);
-                EditText date_textView = (EditText) viewInflated.findViewById(R.id.date_text);
+                TextView date_textView = (TextView) viewInflated.findViewById(R.id.due_date);
                 title_textView.setText(task[0]);
                 description_textView.setText(description[0]);
-                date_textView.setText(date);
-                builder.setView(viewInflated);
+                if(date[0].length() == 0){
+                    date[0] ="No date set";
+                }
+                date_textView.setText(date[0]);
 
+                builder.setView(viewInflated);
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
+                    public void onClick(DialogInterface dialog, int which) { dialog.cancel(); }
                 });
-//                builder.show();
+
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
@@ -141,7 +136,9 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                             dialog.dismiss();
                             description[0] = description_textView.getText().toString();
                             task[0] = title_textView.getText().toString();
-                            ScrollingActivity.tasks.execSQL("UPDATE tasks SET task='" + task[0] + "', description='" + description[0] + "' WHERE task_num=" + task_number.get(position) + " ");
+                            date[0] =date_textView.getText().toString();
+                            if(date[0].equals("No date set")){date[0]="";}
+                            ScrollingActivity.tasks.execSQL("UPDATE tasks SET task='" + task[0] + "', description='" + description[0] + "',date='"+date[0]+"'  WHERE task_num=" + task_number.get(position) + " ");
                             ScrollingActivity.setList();
                         }
                         else{
@@ -149,11 +146,41 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                         }
                     }
                 });
+                DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                          int dayOfMonth) {
+
+
+                        Calendar c=Calendar.getInstance();
+                        c.set(Calendar.YEAR,year);
+                        c.set(Calendar.MONTH,monthOfYear);
+                        c.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                        date_textView.setText(String.valueOf(dayOfMonth)+"/"+String.valueOf(monthOfYear)+"/"+String.valueOf(year));
+                    }
+                };
+
+                //FAB button to inflate the date picker and set the due date
+                FloatingActionButton calendar_button=viewInflated.findViewById(R.id.calendar);
+                calendar_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar c=Calendar.getInstance();
+                        int this_year=c.get(Calendar.YEAR),this_month=c.get(Calendar.MONTH),this_day=c.get(Calendar.DAY_OF_MONTH);
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                                context, dateSetListener, this_year,this_month , this_day);
+                        datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
+                        datePickerDialog.show();
+                        Log.i("mine","calendar opened");
+
+                    }
+                });
             }
         });
     }
 
-//TODO: make calender popup on button press
+//TODO: Set date to the text view on change
 //TODO: add delete animation and change change delete icon to green tick icon
     @Override
     public int getItemCount() {

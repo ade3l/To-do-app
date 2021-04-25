@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="25dp">
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,8 +33,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Task title"
                 android:imeOptions="actionDone"
-                app:errorEnabled="true"
-                />
+                app:errorEnabled="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,17 +80,6 @@
             android:orientation="horizontal"
             android:paddingBottom="5dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/date_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="dd/mm/yyyy" />
-            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/calendar"
@@ -99,8 +90,18 @@
                 android:layout_marginRight="5dp"
                 android:clickable="true"
                 app:elevation="4dp"
-                app:fabSize="mini"
-                app:srcCompat="@drawable/calender" />
+                app:fabSize="normal"
+                app:srcCompat="@drawable/calender"
+                app:useCompatPadding="true" />
+
+            <TextView
+                android:id="@+id/due_date"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="No date set"
+                android:textColor="#151313" />
 
         </LinearLayout>
     </LinearLayout>

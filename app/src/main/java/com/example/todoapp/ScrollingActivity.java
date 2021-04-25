@@ -1,5 +1,6 @@
 package com.example.todoapp;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -22,13 +23,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrollingActivity extends AppCompatActivity {
+public class ScrollingActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     static SQLiteDatabase tasks;
     static List<String> titles_array =new ArrayList<>();
     static List<String> descriptions_array =new ArrayList<>();
@@ -110,6 +112,8 @@ public class ScrollingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(ScrollingActivity.this, "Still under development", Toast.LENGTH_SHORT).show();
+
+
                     }
                 });
                 builder.setView(viewInflated);
@@ -117,21 +121,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        String title = title_textView.getText().toString();
-                        String description =description_textView.getText().toString();
-                        String date=date_textView.getText().toString();
-                        int task_num=pref.getInt("index",1);
-                        if (title.length()!=0){
-                            tasks.execSQL("INSERT INTO tasks(task_num, task,description,date)  Values('"+task_num+"','"+title+"', '"+description+"','"+date+"')");
-                            task_num+=1;
-                            pref.edit().putInt("index", task_num).apply();
-                            Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
-                            setList();
-                        }
-                        else{
-                            Toast.makeText(ScrollingActivity.this, "Title cannot be blank", Toast.LENGTH_SHORT).show();
-                        }
+
 
                     }
                 });
@@ -141,8 +131,28 @@ public class ScrollingActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
-
-                builder.show();
+                AlertDialog dialog=builder.create();
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String title = title_textView.getText().toString();
+                        String description =description_textView.getText().toString();
+                        String date=date_textView.getText().toString();
+                        int task_num=pref.getInt("index",1);
+                        if (title.length()!=0){
+                            dialog.dismiss();
+                            tasks.execSQL("INSERT INTO tasks(task_num, task,description,date)  Values('"+task_num+"','"+title+"', '"+description+"','"+date+"')");
+                            task_num+=1;
+                            pref.edit().putInt("index", task_num).apply();
+                            Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
+                            setList();
+                        }
+                        else{
+                            title_textView.setError(getString(R.string.title_blank));
+                        }
+                    }
+                });
             }
         });
         setList();
@@ -173,4 +183,8 @@ public class ScrollingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+    }
 }

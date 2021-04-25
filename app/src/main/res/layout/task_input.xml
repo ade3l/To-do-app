@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Task title"
                 android:imeOptions="actionDone"
-
+                app:errorEnabled="true"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>

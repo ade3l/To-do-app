@@ -137,18 +137,22 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
-                        description[0] = description_textView.getText().toString();
-                        task[0] = title_textView.getText().toString();
-                        ScrollingActivity.tasks.execSQL("UPDATE tasks SET task='" + task[0] + "', description='" + description[0] + "' WHERE task_num=" + task_number.get(position) + " ");
-                        ScrollingActivity.setList();
+                        if(title_textView.getText().toString().length()!=0) {
+                            dialog.dismiss();
+                            description[0] = description_textView.getText().toString();
+                            task[0] = title_textView.getText().toString();
+                            ScrollingActivity.tasks.execSQL("UPDATE tasks SET task='" + task[0] + "', description='" + description[0] + "' WHERE task_num=" + task_number.get(position) + " ");
+                            ScrollingActivity.setList();
+                        }
+                        else{
+                            title_textView.setError(context.getString(R.string.title_blank));
+                        }
                     }
                 });
             }
         });
     }
-//TODO: make sure that title is not in edit text
-//TODO: make the dialog box only dismiss if title is not empty
+
 //TODO: make calender popup on button press
 //TODO: add delete animation and change change delete icon to green tick icon
     @Override

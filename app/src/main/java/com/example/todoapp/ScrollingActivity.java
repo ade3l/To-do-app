@@ -58,7 +58,9 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         return ScrollingActivity.context;
     }
 
-
+    static void deleteTask(String key){
+//        mRef.child(key).removeValue();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,12 +90,14 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+                tasksMap.put(snapshot.getKey(),snapshot.getValue(Task.class));
+                newAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
+                tasksMap.remove(snapshot.getKey());
+                newAdapter.notifyDataSetChanged();
             }
 
             @Override

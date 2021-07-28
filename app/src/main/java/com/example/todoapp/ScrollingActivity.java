@@ -10,9 +10,14 @@ import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -47,6 +52,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
 
     FirebaseDatabase mDatabase;
     DatabaseReference mRef;
+    ChildEventListener mListener;
     private static Context context;
     public static Context getAppContext() {
         //This function is just to get the context.
@@ -102,6 +108,34 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         vg=(ViewGroup) findViewById(android.R.id.content);
         mDatabase=FirebaseDatabase.getInstance();
         mRef=mDatabase.getReference().child("Tasks");
+        mListener= new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                //Child added
+                Log.i("mine","Child added");
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        mRef.addChildEventListener(mListener);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_task);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

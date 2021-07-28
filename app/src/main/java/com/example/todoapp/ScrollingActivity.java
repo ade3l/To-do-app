@@ -177,6 +177,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
                             pref.edit().putInt("index", task_num).apply();
                             Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
                             Task task = new Task(title,description,date);
+                            mRef.push().setValue(task);
                             setList();
                         }
                         else{

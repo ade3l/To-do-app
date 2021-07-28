@@ -106,11 +106,14 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Edit Task");
                 View viewInflated = LayoutInflater.from(context).inflate(R.layout.task_input, ScrollingActivity.vg, false);
+
                 final EditText title_textView = (EditText) viewInflated.findViewById(R.id.title);
                 final EditText description_textView = (EditText) viewInflated.findViewById(R.id.description);
                 TextView date_textView = (TextView) viewInflated.findViewById(R.id.due_date);
+
                 title_textView.setText(task[0]);
                 description_textView.setText(description[0]);
+
                 if(date[0].length() == 0){
                     date[0] ="No date set";
                 }
@@ -137,7 +140,7 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                             description[0] = description_textView.getText().toString();
                             task[0] = title_textView.getText().toString();
                             date[0] =date_textView.getText().toString();
-                            if(date[0].equals("No date set")){date[0]="";}
+                            if(date[0].equals("No date set")) { date[0]=""; }
                             ScrollingActivity.tasks.execSQL("UPDATE tasks SET task='" + task[0] + "', description='" + description[0] + "',date='"+date[0]+"'  WHERE task_num=" + task_number.get(position) + " ");
                             ScrollingActivity.setList();
                         }
@@ -149,14 +152,9 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                 DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
 
                     @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                          int dayOfMonth) {
-
-
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         Calendar c=Calendar.getInstance();
-                        c.set(Calendar.YEAR,year);
-                        c.set(Calendar.MONTH,monthOfYear);
-                        c.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                        c.set(Calendar.YEAR,year); c.set(Calendar.MONTH,monthOfYear); c.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                         date_textView.setText(String.valueOf(dayOfMonth)+"/"+String.valueOf(monthOfYear)+"/"+String.valueOf(year));
                     }
                 };
@@ -168,20 +166,16 @@ public class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
                     public void onClick(View v) {
                         Calendar c=Calendar.getInstance();
                         int this_year=c.get(Calendar.YEAR),this_month=c.get(Calendar.MONTH),this_day=c.get(Calendar.DAY_OF_MONTH);
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                                context, dateSetListener, this_year,this_month , this_day);
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(context, dateSetListener, this_year,this_month , this_day);
                         datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
                         datePickerDialog.show();
                         Log.i("mine","calendar opened");
-
                     }
                 });
             }
         });
     }
 
-//TODO: Set date to the text view on change
-//TODO: add delete animation and change change delete icon to green tick icon
     @Override
     public int getItemCount() {
         return titles.size();

@@ -29,7 +29,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -70,7 +69,6 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
                 indexes_array.add(c.getInt(task_index));
                 dates_array.add(c.getString(date_index));
                 c.moveToNext();
-
             }
         }
         catch (Exception e){
@@ -79,7 +77,6 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         adapter my_adapter=new adapter(getAppContext(), titles_array, descriptions_array, indexes_array, dates_array);
         recycler.setAdapter(my_adapter);
         recycler.setLayoutManager(new LinearLayoutManager(getAppContext()));
-
     }
 
     @Override
@@ -99,8 +96,8 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         //Assigning the context to the variable
         ScrollingActivity.context =this;
         vg=(ViewGroup) findViewById(android.R.id.content);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_task);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,12 +105,12 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
                 AlertDialog.Builder builder = new AlertDialog.Builder(ScrollingActivity.this);
                 builder.setTitle("New Task");
                 View viewInflated = LayoutInflater.from(ScrollingActivity.this).inflate(R.layout.task_input,(ViewGroup) findViewById(android.R.id.content) , false);
+
                 final EditText title_textView = (EditText) viewInflated.findViewById(R.id.title);
                 final EditText description_textView = (EditText) viewInflated.findViewById(R.id.description);
                 final TextView date_textView = (TextView) viewInflated.findViewById(R.id.due_date);
 
                 DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear,
                                           int dayOfMonth) {
@@ -143,8 +140,6 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
                     }
                 });
                 builder.setView(viewInflated);
-
-
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

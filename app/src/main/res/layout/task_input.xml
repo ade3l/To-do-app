@@ -59,7 +59,8 @@
                 android:layout_height="250dp"
                 android:gravity="top"
                 android:hint="Task description"
-                android:imeOptions="actionDone" />
+                android:imeOptions="actionDone"
+                android:minLines="2"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

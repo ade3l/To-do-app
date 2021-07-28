@@ -54,6 +54,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
     DatabaseReference mRef;
     ChildEventListener mListener;
     List<Task> newTaskList=new ArrayList<>();
+    MyAdapter newAdapter;
     private static Context context;
     public static Context getAppContext() {
         //This function is just to get the context.
@@ -109,11 +110,15 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         vg=(ViewGroup) findViewById(android.R.id.content);
         mDatabase=FirebaseDatabase.getInstance();
         mRef=mDatabase.getReference().child("Tasks");
+        newAdapter=new MyAdapter(getAppContext(),newTaskList);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
+        recycler.setAdapter(newAdapter);
         mListener= new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Task newTask=snapshot.getValue(Task.class);
                 newTaskList.add(newTask);
+                newAdapter.notifyDataSetChanged();
                 Log.i("mine",newTaskList.toString());
             }
 
@@ -214,7 +219,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
                             Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
                             Task task = new Task(title,description,date);
                             mRef.push().setValue(task);
-                            setList();
+//                            setList();
                         }
                         else{
                             title_textView.setError(getString(R.string.title_blank));
@@ -223,7 +228,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
                 });
             }
         });
-        setList();
+//        setList();
     }
 
     @Override
@@ -245,7 +250,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
             tasks.execSQL("DROP TABLE IF EXISTS tasks");
             pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
             pref.edit().putInt("index", 1).apply();
-            setList();
+//            setList();
             return true;
         }
         return super.onOptionsItemSelected(item);

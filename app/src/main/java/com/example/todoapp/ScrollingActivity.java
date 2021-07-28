@@ -4,8 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -41,11 +39,11 @@ import java.util.Calendar;
 import java.util.List;
 
 public class ScrollingActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    static SQLiteDatabase tasks;
-    static List<String> titles_array =new ArrayList<>();
-    static List<String> descriptions_array =new ArrayList<>();
-    static List<Integer> indexes_array = new ArrayList<Integer>();
-    static List<String> dates_array = new ArrayList<>();
+//    static SQLiteDatabase tasks;
+//    static List<String> titles_array =new ArrayList<>();
+//    static List<String> descriptions_array =new ArrayList<>();
+//    static List<Integer> indexes_array = new ArrayList<Integer>();
+//    static List<String> dates_array = new ArrayList<>();
     SharedPreferences pref;
     static ViewGroup vg;
     static RecyclerView recycler;
@@ -63,33 +61,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         //the variable 'context' is assigned the context value in the on create method
         return ScrollingActivity.context;
     }
-    static void setList(){
-        titles_array.clear();
-        descriptions_array.clear();
-        indexes_array.clear();
-        dates_array.clear();
-        Cursor c=tasks.rawQuery("SELECT * FROM tasks", null);
-        int desc_index=c.getColumnIndex("description");
-        int title_index=c.getColumnIndex("task");
-        int task_index=c.getColumnIndex("task_num");
-        int date_index=c.getColumnIndex("date");
-        c.moveToFirst();
-        try {
-            while (c != null) {
-                titles_array.add(c.getString(title_index));
-                descriptions_array.add( c.getString(desc_index));
-                indexes_array.add(c.getInt(task_index));
-                dates_array.add(c.getString(date_index));
-                c.moveToNext();
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        adapter my_adapter=new adapter(getAppContext(), titles_array, descriptions_array, indexes_array, dates_array);
-        recycler.setAdapter(my_adapter);
-        recycler.setLayoutManager(new LinearLayoutManager(getAppContext()));
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,9 +73,6 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         CollapsingToolbarLayout toolBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
 
-        pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
-        tasks=this.openOrCreateDatabase("tasks data",MODE_PRIVATE,null);
-        tasks.execSQL("CREATE TABLE IF NOT EXISTS tasks(task_num INT(4), task VARCHAR , description VARCHAR, date VARCHAR)");
         recycler=findViewById(R.id.recyclerView);
         //Assigning the context to the variable
         ScrollingActivity.context =this;
@@ -213,9 +182,6 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
                         int task_num=pref.getInt("index",1);
                         if (title.length()!=0){
                             dialog.dismiss();
-                            tasks.execSQL("INSERT INTO tasks(task_num, task,description,date)  Values('"+task_num+"','"+title+"', '"+description+"','"+date+"')");
-                            task_num+=1;
-                            pref.edit().putInt("index", task_num).apply();
                             Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
                             Task task = new Task(title,description,date);
                             mRef.push().setValue(task);
@@ -228,7 +194,6 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
                 });
             }
         });
-//        setList();
     }
 
     @Override
@@ -247,10 +212,6 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            tasks.execSQL("DROP TABLE IF EXISTS tasks");
-            pref=this.getSharedPreferences("com.example.todoapp", Context.MODE_PRIVATE);
-            pref.edit().putInt("index", 1).apply();
-//            setList();
             return true;
         }
         return super.onOptionsItemSelected(item);

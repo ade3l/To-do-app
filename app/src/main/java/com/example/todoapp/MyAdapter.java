@@ -11,14 +11,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     List<Task> tasks = new ArrayList<>();
     Context context;
-    public MyAdapter(Context ct, List<Task> tasks){
+    HashMap<String,Task> taskMap;
+    List<String> keys;
+    public MyAdapter(Context ct, List<Task> tasks, HashMap<String,Task> taskMap){
         this.context = ct;
         this.tasks = tasks;
+        this.taskMap=taskMap;
     }
 
     @NonNull
@@ -34,7 +39,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Task task=tasks.get(position);
+        String key=keys.get(position);
+        Task task=taskMap.get(key);
         holder.title_text.setText(task.getTitle());
         //if the description is empty the it'll be hidden
         if (task.getDesc().length() != 0) {
@@ -49,7 +55,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public int getItemCount() {
-        return tasks.toArray().length;
+        Collection<String> kc= taskMap.keySet();
+        keys= new ArrayList<>(kc);
+        return taskMap.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

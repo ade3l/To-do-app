@@ -36,14 +36,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class ScrollingActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-//    static SQLiteDatabase tasks;
-//    static List<String> titles_array =new ArrayList<>();
-//    static List<String> descriptions_array =new ArrayList<>();
-//    static List<Integer> indexes_array = new ArrayList<Integer>();
-//    static List<String> dates_array = new ArrayList<>();
+
     SharedPreferences pref;
     static ViewGroup vg;
     static RecyclerView recycler;
@@ -52,6 +49,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
     DatabaseReference mRef;
     ChildEventListener mListener;
     List<Task> newTaskList=new ArrayList<>();
+    HashMap<String, Task> tasksMap=new HashMap<>();
     MyAdapter newAdapter;
     private static Context context;
     public static Context getAppContext() {
@@ -79,7 +77,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         vg=(ViewGroup) findViewById(android.R.id.content);
         mDatabase=FirebaseDatabase.getInstance();
         mRef=mDatabase.getReference().child("Tasks");
-        newAdapter=new MyAdapter(getAppContext(),newTaskList);
+        newAdapter=new MyAdapter(getAppContext(),newTaskList,tasksMap);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(newAdapter);
         mListener= new ChildEventListener() {
@@ -87,6 +85,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Task newTask=snapshot.getValue(Task.class);
                 newTaskList.add(newTask);
+                tasksMap.put(snapshot.getKey(),newTask);
                 newAdapter.notifyDataSetChanged();
                 Log.i("mine",newTaskList.toString());
             }
@@ -179,13 +178,11 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
                         String description =description_textView.getText().toString();
                         String date=date_textView.getText().toString();
                         if(date.equals("No date set")){date="";}
-                        int task_num=pref.getInt("index",1);
                         if (title.length()!=0){
                             dialog.dismiss();
                             Toast.makeText(ScrollingActivity.this, "Task added successfully", Toast.LENGTH_SHORT).show();
                             Task task = new Task(title,description,date);
                             mRef.push().setValue(task);
-//                            setList();
                         }
                         else{
                             title_textView.setError(getString(R.string.title_blank));

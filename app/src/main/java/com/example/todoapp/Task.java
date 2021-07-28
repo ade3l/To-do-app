@@ -7,6 +7,7 @@ public class Task {
         this.desc=desc;
         this.date=date;
     }
+    Task(){}
     String getTitle(){return title;}
     String getDesc(){return desc;}
     String getDate(){return date;}

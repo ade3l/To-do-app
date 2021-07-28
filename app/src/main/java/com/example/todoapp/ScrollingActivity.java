@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
@@ -20,9 +22,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +70,23 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
+        AppBarLayout appBar=findViewById(R.id.app_bar);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_task);
+        NestedScrollView sw=findViewById(R.id.scroll);
+        ConstraintLayout cl=findViewById(R.id.cl);
+        LottieAnimationView lv=findViewById(R.id.lv);
+
+                new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                cl.setVisibility(View.GONE);
+                lv.pauseAnimation();
+                appBar.setVisibility(View.VISIBLE);
+                fab.setVisibility(View.VISIBLE);
+                sw.setVisibility(View.VISIBLE);
+            }
+        }, 2000);
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -111,7 +133,6 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
             }
         };
         mRef.addChildEventListener(mListener);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_task);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

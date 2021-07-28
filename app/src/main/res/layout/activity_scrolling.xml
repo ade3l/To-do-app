@@ -14,7 +14,8 @@
         android:layout_height="264dp"
         android:background="@drawable/bg"
         android:fitsSystemWindows="true"
-        android:theme="@style/Theme.ToDoApp.AppBarOverlay">
+        android:theme="@style/Theme.ToDoApp.AppBarOverlay"
+        android:visibility="gone">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
@@ -30,8 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/Theme.ToDoApp.PopupOverlay"
-                />
+                app:popupTheme="@style/Theme.ToDoApp.PopupOverlay" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -43,10 +43,31 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
 
+        android:visibility="gone"
         app:srcCompat="@android:drawable/ic_input_add" />
+
     <include
         layout="@layout/content_scrolling"
-        android:layout_height="557dp"
-        android:visibility="visible" />
+        android:layout_height="557dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#00FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/tick" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

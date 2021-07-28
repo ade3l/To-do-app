@@ -93,9 +93,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        task.setTitle(title_textView.getText().toString().trim());
-                        task.setDesc(description_textView.getText().toString().trim());
-                        task.setDate(date_textView.getText().toString().trim());
                         Map<String,Object> newMap=new HashMap<>();
                         newMap.put("title",title_textView.getText().toString().trim());
                         newMap.put("desc",description_textView.getText().toString().trim());

@@ -53,6 +53,7 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
     FirebaseDatabase mDatabase;
     DatabaseReference mRef;
     ChildEventListener mListener;
+    List<Task> newTaskList=new ArrayList<>();
     private static Context context;
     public static Context getAppContext() {
         //This function is just to get the context.
@@ -111,8 +112,9 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         mListener= new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                //Child added
-                Log.i("mine","Child added");
+                Task newTask=snapshot.getValue(Task.class);
+                newTaskList.add(newTask);
+                Log.i("mine",newTaskList.toString());
             }
 
             @Override

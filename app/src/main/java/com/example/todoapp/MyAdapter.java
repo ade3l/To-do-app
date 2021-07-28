@@ -16,13 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    List<Task> tasks = new ArrayList<>();
     Context context;
     HashMap<String,Task> taskMap;
     List<String> keys;
-    public MyAdapter(Context ct, List<Task> tasks, HashMap<String,Task> taskMap){
+    public MyAdapter(Context ct, HashMap<String,Task> taskMap){
         this.context = ct;
-        this.tasks = tasks;
         this.taskMap=taskMap;
     }
 

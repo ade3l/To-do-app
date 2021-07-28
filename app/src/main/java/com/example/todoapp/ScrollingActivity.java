@@ -41,14 +41,12 @@ import java.util.List;
 
 public class ScrollingActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    SharedPreferences pref;
     static ViewGroup vg;
     static RecyclerView recycler;
 
     FirebaseDatabase mDatabase;
     DatabaseReference mRef;
     ChildEventListener mListener;
-    List<Task> newTaskList=new ArrayList<>();
     HashMap<String, Task> tasksMap=new HashMap<>();
     MyAdapter newAdapter;
     private static Context context;
@@ -77,17 +75,15 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         vg=(ViewGroup) findViewById(android.R.id.content);
         mDatabase=FirebaseDatabase.getInstance();
         mRef=mDatabase.getReference().child("Tasks");
-        newAdapter=new MyAdapter(getAppContext(),newTaskList,tasksMap);
+        newAdapter=new MyAdapter(getAppContext(),tasksMap);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(newAdapter);
         mListener= new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Task newTask=snapshot.getValue(Task.class);
-                newTaskList.add(newTask);
                 tasksMap.put(snapshot.getKey(),newTask);
                 newAdapter.notifyDataSetChanged();
-                Log.i("mine",newTaskList.toString());
             }
 
             @Override

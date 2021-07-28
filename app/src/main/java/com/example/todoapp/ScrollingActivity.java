@@ -10,6 +10,8 @@ import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +45,8 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
     static ViewGroup vg;
     static RecyclerView recycler;
 
+    FirebaseDatabase mDatabase;
+    DatabaseReference mRef;
     private static Context context;
     public static Context getAppContext() {
         //This function is just to get the context.
@@ -96,7 +100,8 @@ public class ScrollingActivity extends AppCompatActivity implements DatePickerDi
         //Assigning the context to the variable
         ScrollingActivity.context =this;
         vg=(ViewGroup) findViewById(android.R.id.content);
-        
+        mDatabase=FirebaseDatabase.getInstance();
+        mRef=mDatabase.getReference().child("Tasks");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_task);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
